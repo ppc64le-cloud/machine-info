@@ -1,0 +1,49 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: machine-info-route
+spec:
+  host: machine-info.apps.het-hc-1.hypershift-ppc64le.com
+  to:
+    kind: Service
+    name: machine-info
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: machine-info
+spec:
+  selector:
+    app: machine-info
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: machine-info
+  labels:
+    app: machine-info
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: machine-info
+  template:
+    metadata:
+      labels:
+        app: machine-info
+    spec:
+      containers:
+        - name: machine-info
+          image: quay.io/mkumatag/machine-info:latest
+          ports:
+            - containerPort: 8080
