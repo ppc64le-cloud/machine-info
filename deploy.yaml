@@ -3,7 +3,6 @@ kind: Route
 metadata:
   name: machine-info-route
 spec:
-  host: machine-info.apps.het-hc-1.hypershift-ppc64le.com
   to:
     kind: Service
     name: machine-info

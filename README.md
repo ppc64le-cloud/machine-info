@@ -14,18 +14,14 @@ $ docker buildx build --platform=linux/ppc64le,linux/amd64,linux/arm64 --push -t
 - Openshift cluster
 
 ### How to deploy/use
-- Modify the following route to appropriete one
-```shell
-spec:
-  host: machine-info.apps.het-hc-1.hypershift-ppc64le.com
-```
-
-to 
-```shell
-spec:
-  host: <user supplied hostname, can be used from the existing routes>
-```
 - Deploy the application
 ```shell
 $ oc apply -f deploy.yaml
+```
+- Get the route and curl the hosturl with /machine-info endpoint
+```shell
+$ oc get route machine-info-route
+
+# replace the hostname based on the above output and execute it to test.
+$ for i in `seq 1 10`; do curl -k https://machine-info-route-default.apps.het-hc-1.hypershift-ppc64le.com/machine-info; done
 ```
